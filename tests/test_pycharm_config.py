@@ -1,7 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-@author: Curtis Yu
-@contact: cuyu@splunk.com
-@since: 06/12/2017
-"""
+
+
+def test_workspace_configuration():
+    assert 1
+
+
+def test_open_pycharm():
+    """
+    Only test if our created .idea folder is exist in the open Pycharm project path
+    """
+    pass
