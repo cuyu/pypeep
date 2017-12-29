@@ -7,4 +7,3 @@ clean:
 
 test:
 	python setup.py test
-	coveralls

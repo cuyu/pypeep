@@ -1,9 +1,17 @@
 language: python
-python:
-  - "2.7"
+matrix:
+  include:
+  - os: linux
+    python: "2.7"
+  - os: osx
+    python: "2.7"
 # command to install dependencies
 install:
-  - pip install -e .
-  - pip install coveralls
+- pip install -e .
+- pip install coveralls
 # command to run tests
-script: make test
+script:
+- make test
+# upload code coverage result to Coveralls if tests passing
+after_success:
+- coveralls
