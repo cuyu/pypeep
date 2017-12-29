@@ -3,8 +3,10 @@ matrix:
   include:
   - os: linux
     python: "2.7"
+    dist: trusty
   - os: osx
     python: "2.7"
+    dist: trusty
 # command to install dependencies
 install:
 - pip install -e .
