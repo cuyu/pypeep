@@ -1,5 +1,7 @@
 # pypeep
 
+![Travis](https://img.shields.io/travis/cuyu/pypeep.svg)![PyPI](https://img.shields.io/pypi/pyversions/pypeep.svg)![npm](https://img.shields.io/npm/l/express.svg)
+
 > An automatic remote debug configurator for Pycharm (on mac OS).
 
 

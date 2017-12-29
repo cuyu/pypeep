@@ -14,12 +14,15 @@ setup(
 
     packages=find_packages(),
     include_package_data=True,
+    classifiers=[
+        'Programming Language :: Python :: 2.7'
+    ],
     platforms="any",
     install_requires=["paramiko",
                       "docker",
                       "colorama",
                       "psutil"],
     entry_points={
-        'console_scripts': ['decade = decade.main:main']
+        'console_scripts': ['pypeep = pypeep.main:main']
     }
 )
