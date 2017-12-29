@@ -6,5 +6,5 @@ clean:
 	rm -rf dist
 
 test:
-	pytest --cov=pypeep
+	python setup.py test
 	coveralls
