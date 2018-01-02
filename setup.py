@@ -37,7 +37,7 @@ test_requirements = [
 
 setup(
     name="pypeep",
-    version="0.1.0",
+    version="0.1.1",
     keywords=("PyCharm", "debug", "remote debug"),
     description="debug configurator",
     long_description="Configure Pycharm for remote debugging",
@@ -54,8 +54,12 @@ setup(
     ],
     platforms="any",
     install_requires=install_requirements,
-    cmdclass={'test': PyTest},
-    tests_require=test_requirements,
+    cmdclass={
+        'test': PyTest,
+    },
+    extras_require={
+        'test': test_requirements,
+    },
     entry_points={
         'console_scripts': ['pypeep = pypeep.main:main']
     }

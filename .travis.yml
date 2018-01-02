@@ -5,12 +5,11 @@ matrix:
     python: "2.7"
     dist: trusty
   - os: osx
-    python: "2.7"
-    dist: trusty
+    language: generic
+    python: 2.7
 # command to install dependencies
 install:
-- pip install -e .
-- pip install coveralls
+- pip install -e '.[test]'
 # command to run tests
 script:
 - make test

@@ -7,3 +7,6 @@ clean:
 
 test:
 	python setup.py test
+
+install:
+	pip install -e .
