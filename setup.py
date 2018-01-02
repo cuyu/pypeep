@@ -33,6 +33,7 @@ test_requirements = [
     "pytest",
     "pytest-cov",
     "coveralls",
+    "mock",
 ]
 
 setup(
