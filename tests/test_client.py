@@ -18,7 +18,7 @@ class TestDockerClient(object):
         _, result, _ = docker_client.execute('pwd')
         assert result
 
-    def test_send_files(self, docker_client):
+    def test_send_file(self, docker_client):
         _, path = tempfile.mkstemp(suffix='abcdefg')
         filename = os.path.basename(path)
         docker_client.send_files(path, '/tmp/{0}'.format(filename))
@@ -29,9 +29,28 @@ class TestDockerClient(object):
         else:
             assert False, 'File not found in container'
 
-    def test_fetch_files(self, docker_client):
+    def test_send_folder(self, docker_client):
+        path = tempfile.mkdtemp(suffix='qazxsw')
+        filename = os.path.basename(path)
+        docker_client.send_files(path, '/tmp/{0}'.format(filename))
+        _, result, _ = docker_client.execute('ls /tmp')
+        for name in result.split('\n'):
+            if name == filename:
+                break
+        else:
+            assert False, 'File not found in container'
+
+    def test_fetch_file(self, docker_client):
         filename = 'qwerasdf'
         docker_client.execute('touch /tmp/{0}'.format(filename))
+        local_path = '/tmp/{0}'.format(filename)
+        remote_path = local_path
+        docker_client.fetch_files(remote_path, local_path)
+        assert os.path.exists(local_path)
+
+    def test_fetch_folder(self, docker_client):
+        filename = 'zxcvasdf'
+        docker_client.execute('mkdir /tmp/{0}'.format(filename))
         local_path = '/tmp/{0}'.format(filename)
         remote_path = local_path
         docker_client.fetch_files(remote_path, local_path)
