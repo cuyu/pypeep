@@ -41,7 +41,11 @@ class TestDockerClient(object):
             assert False, 'File not found in container'
 
     def test_send_folder(self, client):
+        # Create empty folder and sub folder/files in it
         path = tempfile.mkdtemp(suffix='qazxsw')
+        os.makedirs(os.path.join(path, 'sub', 'sub'))
+        open(os.path.join(path, 'sub', 'aaa'), 'a').close()
+
         filename = os.path.basename(path)
         client.send_files(path, '/tmp/{0}'.format(filename))
         _, result, _ = client.execute('ls /tmp')
@@ -62,7 +66,7 @@ class TestDockerClient(object):
     def test_fetch_folder(self, client):
         filename = 'zxcvasdf'
         client.execute('mkdir /tmp/{0}'.format(filename))
+        client.execute('touch /tmp/{0}/bbb'.format(filename))
         local_path = '/tmp/{0}'.format(filename)
-        remote_path = local_path
-        client.fetch_files(remote_path, local_path)
+        client.fetch_files('/tmp', local_path)
         assert os.path.exists(local_path)
