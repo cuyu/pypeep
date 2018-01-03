@@ -66,7 +66,10 @@ class TestDockerClient(object):
     def test_fetch_folder(self, client):
         filename = 'zxcvasdf'
         client.execute('mkdir /tmp/{0}'.format(filename))
+        client.execute('mkdir /tmp/{0}/ccc'.format(filename))
         client.execute('touch /tmp/{0}/bbb'.format(filename))
         local_path = '/tmp/{0}'.format(filename)
-        client.fetch_files('/tmp', local_path)
-        assert os.path.exists(local_path)
+        remote_path = local_path
+        client.fetch_files(remote_path, local_path)
+        assert os.path.isfile(os.path.join(local_path, 'bbb'))
+        assert os.path.isdir(os.path.join(local_path, 'ccc'))
