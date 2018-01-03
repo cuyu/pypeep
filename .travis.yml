@@ -1,7 +1,19 @@
+sudo: required
+
 language: python
+
+services:
+- docker
+
+before_install:
+- docker pull xaviercalland/docker-python-virtualenv:2.7-alpine
+- docker run -d -it xaviercalland/docker-python-virtualenv:2.7-alpine
+- export CONTAINER_ID=`docker ps -q`
+
 os: linux
+
 python: "2.7"
-dist: trusty
+
 # command to install dependencies
 install:
 - pip install -e '.[test]'

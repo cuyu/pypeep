@@ -51,7 +51,8 @@ class Client(object):
                 for line in result:
                     stdout += line + '\n'
             _LOGGER.info('stdout: \n{0}'.format(stdout))
-            return result
+            # We only have stdout here, so leave stdin, stderr empty
+            return '', stdout, ''
 
     def send_files(self, local_path, remote_path):
         _LOGGER.info('sending files from {0} (local) to {1} (remote)'.format(local_path, remote_path))
