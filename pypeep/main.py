@@ -210,7 +210,7 @@ def main():
     # Make sure the code is the latest?
     git_check_version(local_path)
 
-    config_IDE(args.server_name, remote_path, project_name, local_project_path, local_ip, local_port, ssh_port)
+    config_IDE(server_name, remote_path, project_name, local_project_path, local_ip, local_port, ssh_port)
 
     commands = []
 

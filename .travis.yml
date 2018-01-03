@@ -9,6 +9,8 @@ before_install:
 - docker pull xaviercalland/docker-python-virtualenv:2.7-alpine
 - docker run -d -it xaviercalland/docker-python-virtualenv:2.7-alpine
 - export CONTAINER_ID=`docker ps -q`
+- docker pull sickp/alpine-sshd
+- docker run -d --rm --publish=2222:22 sickp/alpine-sshd
 
 os: linux
 
