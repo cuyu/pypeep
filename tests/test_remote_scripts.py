@@ -32,7 +32,3 @@ def test_prepare_script(lib_name, python_version):
     path = mock_python_path(lib_name, python_version)
     prepare(os.path.join(path, 'bin'), lib_name)
     assert os.path.exists(os.path.join(path, lib_name, python_version, 'sitecustomize.py'))
-
-
-def test_sitecustomize():
-    pass

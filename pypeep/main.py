@@ -90,12 +90,12 @@ def edit_config_files(f, file_location, local_path, args_list):
 
 def git_check_version(local_project_path):
     if '.git' not in os.listdir(local_project_path):
-        repo = Repo.init(local_project_path, bare=False)
-    else:
-        repo = Repo(local_project_path)
+        return
+
+    repo = Repo(local_project_path)
 
     commits_ahead = repo.iter_commits('origin/' + repo.active_branch.name + '..' + repo.active_branch.name)
-    count_ahead = sum(1 for c in commits_ahead)
+    count_ahead = sum([1 for c in commits_ahead])
     if count_ahead:
         current_head = git.refs.head.HEAD(repo, path='HEAD')
         git.refs.head.HEAD.reset(current_head, commit='HEAD~' + str(count_ahead))

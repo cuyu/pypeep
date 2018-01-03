@@ -20,10 +20,3 @@ def test_workspace_configuration(server_name, remote_path, project_name, local_p
     assert workspace.findall(".//*[@name='HOST']")[0].attrib['value'] == local_ip
     remote_mappings = et.parse(os.path.join(local_path, '.idea', 'remote-mappings.xml'))
     assert remote_mappings.findall(".//mapping")[0].attrib['remote-root'] == remote_path
-
-
-def test_open_pycharm():
-    """
-    Only test if our created .idea folder is exist in the open Pycharm project path
-    """
-    pass

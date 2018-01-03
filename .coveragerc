@@ -1,6 +1,7 @@
 [report]
 exclude_lines =
     if __name__ == .__main__.:
+    def parse_args
 
 omit =
     pypeep/pypeep_resource/sitecustomize.py
