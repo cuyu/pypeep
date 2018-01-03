@@ -27,6 +27,7 @@ install_requirements = [
     "docker",
     "colorama",
     "psutil",
+    "GitPython",
 ]
 
 test_requirements = [

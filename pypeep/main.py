@@ -26,8 +26,8 @@ def parse_args():
                         help="project path on remote client")
     parser.add_argument("--entry",
                         help="the entry python file of source code, or a executable file in the remote")
-    parser.add_argument("--server-name", default='decade',
-                        help="IDE server name (optional, default decade)")
+    parser.add_argument("--server-name", default='pypeep',
+                        help="IDE server name (optional, default pypeep)")
     parser.add_argument("--hostname",
                         help="remote client hostname or docker container id")
     parser.add_argument("--ssh-user",
@@ -75,7 +75,7 @@ def inject_sitecustomize(commands, client, local_ip, local_port):
     # hijack export keyword
     commands.append('source /tmp/{0}/hijack_export.sh'.format(_REMOTE_RESOURCE))
     # Declare the env variables in remote
-    commands.append('export DECADE_IP={0};export DECADE_PORT={1}'.format(local_ip, local_port))
+    commands.append('export PYPEEP_IP={0};export PYPEEP_PORT={1}'.format(local_ip, local_port))
 
 
 def edit_config_files(f, file_location, local_path, args_list):
@@ -107,21 +107,29 @@ def git_check_version(local_project_path):
         origin.pull()
 
 
-def config_IDE(args, remote_path, project_name, local_path, local_ip, local_port, ssh_port):
+def config_IDE(server_name, remote_path, project_name, local_path, local_ip, local_port, ssh_port):
+    ide_config = {
+        "deployment": [
+            {'tag': 'component', 'attrib': {'serverName': server_name}},
+            {'tag': 'paths', 'attrib': {'name': server_name}},
+            {'tag': 'mapping', 'attrib': {'deploy': remote_path, 'local': '$PROJECT_DIR$' + remote_path}}
+        ],
+        "misc": [
+        ],
+        "remote-mappings": [
+            {'tag': 'mapping', 'attrib': {'local-root': '$PROJECT_DIR$' + remote_path, 'remote-root': remote_path}},
+        ],
+        "webServers": [
+        ],
+    }
+
     local_idea_path = os.path.join(local_path, '.idea')
 
     if os.path.exists(local_idea_path):
         shutil.rmtree(local_idea_path)
-    git_check_version(local_path)
     os.mkdir(local_idea_path)
 
-    # if not os.path.exists(local_idea_path):
-    #     os.mkdir(local_idea_path)
-    # else:
-    #     shutil.rmtree(local_idea_path)
-    #     os.mkdir(local_idea_path)
-
-    script_path = pkgutil.get_loader("decade").filename
+    script_path = pkgutil.get_loader("pypeep").filename
     print script_path
 
     # other config files
@@ -132,7 +140,7 @@ def config_IDE(args, remote_path, project_name, local_path, local_ip, local_port
         file_name = os.path.splitext(f)[0]
         if file_name == 'workspace' or file_name == 'webServer' or file_name == 'try':
             continue
-        config_list = args[file_name]
+        config_list = ide_config[file_name]
         edit_config_files(f, file_location, local_path, config_list)
 
     # webServers.xml
@@ -143,7 +151,7 @@ def config_IDE(args, remote_path, project_name, local_path, local_ip, local_port
             ele.attrib['value'] = str(ssh_port)
     webservers_config.write(os.path.join(pycharm_config_dir, 'webServers.xml'))
     edit_config_files('webServers.xml', os.path.join(pycharm_config_dir, 'webServers.xml'), local_path,
-                      args['webServers'])
+                      ide_config['webServers'])
 
     # workspace.xml
     workspace_config = et.parse(os.path.join(pycharm_config_dir, 'workspace.xml'))
@@ -176,35 +184,20 @@ def config_IDE(args, remote_path, project_name, local_path, local_ip, local_port
 
 def main():
     args = parse_args()
-    remote_path = args.remote_path or os.environ.get('DECADE_REMOTE_PATH')
+    remote_path = args.remote_path or os.environ.get('PYPEEP_REMOTE_PATH')
     assert remote_path
     server_name = args.server_name
     ssh_port = args.ssh_port
-    local_path = args.local_path or os.environ.get('DECADE_LOCAL_PATH')
+    local_path = args.local_path or os.environ.get('PYPEEP_LOCAL_PATH')
     assert local_path
     assert os.path.isdir(local_path), "local project path is not a directory."
     local_ip = get_host_ip()
     local_port = get_unoccupied_port()
     project_name = os.path.basename(remote_path)
 
-    ide_config = {
-        "deployment": [
-            {'tag': 'component', 'attrib': {'serverName': server_name}},
-            {'tag': 'paths', 'attrib': {'name': server_name}},
-            {'tag': 'mapping', 'attrib': {'deploy': remote_path, 'local': '$PROJECT_DIR$' + remote_path}}
-        ],
-        "misc": [
-        ],
-        "remote-mappings": [
-            {'tag': 'mapping', 'attrib': {'local-root': '$PROJECT_DIR$' + remote_path, 'remote-root': remote_path}},
-        ],
-        "webServers": [
-        ],
-    }
-
     client = Client(args.hostname, args.ssh_user, args.ssh_password, args.ssh_port)
 
-    client.send_files(os.path.join(pkgutil.get_loader("decade").filename, _REMOTE_RESOURCE),
+    client.send_files(os.path.join(pkgutil.get_loader("pypeep").filename, _REMOTE_RESOURCE),
                       os.path.join('/tmp', _REMOTE_RESOURCE))
 
     # remote project is placed in the local project path. Modify this for consistency
@@ -214,7 +207,10 @@ def main():
     if not os.path.exists(local_project_path):
         client.fetch_files(remote_path, local_project_path)
 
-    config_IDE(ide_config, remote_path, project_name, local_project_path, local_ip, local_port, ssh_port)
+    # Make sure the code is the latest?
+    git_check_version(local_path)
+
+    config_IDE(args.server_name, remote_path, project_name, local_project_path, local_ip, local_port, ssh_port)
 
     commands = []
 

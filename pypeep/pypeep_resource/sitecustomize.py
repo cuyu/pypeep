@@ -2,6 +2,6 @@
 # -*- coding: utf-8 -*-
 import os
 
-if os.environ['DECADE_IP'] and os.environ['DECADE_PORT']:
+if os.environ['PYPEEP_IP'] and os.environ['PYPEEP_PORT']:
     import pydevd
-    pydevd.settrace(os.environ['DECADE_IP'], port=int(os.environ['DECADE_PORT']), stdoutToServer=True, stderrToServer=True)
+    pydevd.settrace(os.environ['PYPEEP_IP'], port=int(os.environ['PYPEEP_PORT']), stdoutToServer=True, stderrToServer=True)

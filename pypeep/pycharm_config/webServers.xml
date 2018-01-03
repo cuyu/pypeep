@@ -6,7 +6,7 @@
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" />
           </advancedOptions>
-          <option name="port" value="22" />
+          <option name="port" value="2222" />
         </fileTransfer>
       </webServer>
     </option>
