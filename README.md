@@ -34,7 +34,7 @@ pypeep --remote-path=<remote_path> --entry=<entry> --server-name=<server_name> -
 
 For example,
 ```
-pypeep --remote-path=/root/hello --entry=hello.py --server-name=hello --hostname=systest-sca-linux05 --ssh-user=root --ssh-password=sp1unk --local-path=/Users/rzhu/pytest_practice/try6
+pypeep --remote-path=/root/hello --entry=hello.py --server-name=hello --hostname=target-host --ssh-user=root --ssh-password=target-password --local-path=/Users/rzhu/pytest_practice/try6
 ```
 
 Also support remote debug code in docker container (just leave `--ssh-user` and `--ssh-password` empty and set `--hostname` to the container id):
@@ -98,7 +98,7 @@ Above solution works in both native Python env or virtualenv, and even allow the
 ### Todo
 
 - Use env variables to store the local project path (so that we can store config in a shell script, a optional way to use the cmd easier)
-    - Give the content of the shell script, like the `~/.orca/env.sh`
+    - Give the content of the shell script, like the `env.sh`
     - In the end of the shell script, call `source ./env.sh`, so that user just need to call one script when debugging on apps jenkins
 - ~~Use `open -a PyCharm <project_path>` to open the PyCharm after script running~~
 - ~~Support remote debugging in docker containers~~
